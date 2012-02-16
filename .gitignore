@@ -1,6 +1,6 @@
 Compress-LZ4-*
 LZ4.bs
-LZ4.c
+/LZ4.c
 LZ4.o
 MANIFEST.bak
 MYMETA.json
