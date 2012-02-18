@@ -9,10 +9,6 @@
 
 #include "src/lz4.c"
 
-#ifndef MAX
-#define MAX(a, b) ((a) > (b) ? (a) : (b))
-#endif
-
 MODULE = Compress::LZ4    PACKAGE = Compress::LZ4
 
 PROTOTYPES: ENABLE
@@ -31,7 +27,7 @@ CODE:
     src = SvPVbyte(sv, src_len);
     if (! src_len)
         XSRETURN_NO;
-    dest_len = sizeof(int) + src_len + MAX(8, (int)(1 + src_len * 0.004f));
+    dest_len = sizeof(int) + src_len + LZ4_compressBound(src_len);
     RETVAL = newSV(dest_len);
     dest = SvPVX(RETVAL);
     if (! dest)
