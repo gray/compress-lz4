@@ -1,5 +1,9 @@
 Revision history for Compress-LZ4
 
+0.03  Fri Mar  2 04:31:45 UTC 2012
+    - Integrated latest LZ4 source for better performance.
+    - Updated benchmarks.
+
 0.02  Mon Feb 20 21:24:20 UTC 2012
     - Integrated latest LZ4 source for portability updates.
 
