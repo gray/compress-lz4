@@ -2,6 +2,7 @@ use strict;
 use warnings;
 use Test::More;
 use Compress::LZ4;
+use Config;
 
 for (qw(compress decompress uncompress)) {
     ok eval "defined &$_", "$_() is exported";
@@ -27,7 +28,7 @@ ok compress($scalar) eq compress(\$scalar), 'scalar ref';
 # https://rt.cpan.org/Public/Bug/Display.html?id=75624
 {
     # Remove the length header.
-    my $data = pack "C*", unpack "x[i!]C*", compress('0' x 14);
+    my $data = unpack "x$Config{intsize} a*", compress('0' x 14);
     ok $data eq "\0240\001\0P00000", 'AMD64 bug';
 }
 
