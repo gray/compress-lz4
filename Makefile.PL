@@ -1,5 +1,6 @@
 use strict;
 use warnings;
+use Config;
 use ExtUtils::MakeMaker;
 
 my %conf = (
@@ -18,8 +19,14 @@ my %conf = (
             repository => 'https://github.com/gray/compress-lz4',
         },
     },
+
+    CCFLAGS => $Config{ccflags} . ' -o $*$(OBJ_EXT)',
+    C       => [ '$(BASEEXT).c', 'src/lz4.c' ],
+    OBJECT  => '$(O_FILES)',
+    LDFROM  => '$(O_FILES)',
+
     dist   => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
-    clean  => { FILES    => 'Compress-LZ4-*' },
+    clean  => { FILES    => '$(OBJECT) Compress-LZ4-*' },
 );
 
 my $eumm_version =  do {
@@ -42,8 +49,7 @@ authortest:
 }
 
 sub MY::dist_test {
-    my $self = shift;
-    return $self->MM::dist_test . <<"    MAKE_FRAG";
+    return shift->MM::dist_test . <<"    MAKE_FRAG";
 \tcd \$(DISTVNAME) && \$(MAKE) authortest \$(PASTHRU)
     MAKE_FRAG
 }

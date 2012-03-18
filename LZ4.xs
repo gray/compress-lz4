@@ -7,7 +7,7 @@
 #define NEED_sv_2pvbyte
 #include "ppport.h"
 
-#include "src/lz4.c"
+#include "src/lz4.h"
 
 MODULE = Compress::LZ4    PACKAGE = Compress::LZ4
 
@@ -27,7 +27,7 @@ CODE:
     src = SvPVbyte(sv, src_len);
     if (! src_len)
         XSRETURN_NO;
-    dest_len = sizeof(int) + src_len + LZ4_compressBound(src_len);
+    dest_len = sizeof(int) + LZ4_compressBound(src_len);
     RETVAL = newSV(dest_len);
     dest = SvPVX(RETVAL);
     if (! dest)
