@@ -1,5 +1,8 @@
 Revision history for Compress-LZ4
 
+0.04  Sun Mar 18 06:48:17 UTC 2012
+    - Added fix for AMD64. (RT #75624)
+
 0.03  Fri Mar  2 04:31:45 UTC 2012
     - Integrated latest LZ4 source for better performance.
     - Updated benchmarks.
