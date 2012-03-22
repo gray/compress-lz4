@@ -1,5 +1,8 @@
 Revision history for Compress-LZ4
 
+0.06  Thu Mar 22 09:00:11 UTC 2012
+    - Fixed for compilers that don't support -o option.
+
 0.05  Sun Mar 18 19:39:19 UTC 2012
     - Fixed test for Perl 5.6.
 
