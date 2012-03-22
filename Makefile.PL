@@ -1,6 +1,5 @@
 use strict;
 use warnings;
-use Config;
 use ExtUtils::MakeMaker;
 
 my %conf = (
@@ -20,13 +19,10 @@ my %conf = (
         },
     },
 
-    CCFLAGS => $Config{ccflags} . ' -o $*$(OBJ_EXT)',
-    C       => [ '$(BASEEXT).c', 'src/lz4.c' ],
-    OBJECT  => '$(O_FILES)',
-    LDFROM  => '$(O_FILES)',
+    OBJECT => '$(O_FILES) src/lz4$(OBJ_EXT)',
 
     dist   => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
-    clean  => { FILES    => '$(OBJECT) Compress-LZ4-*' },
+    clean  => { FILES    => 'Compress-LZ4-*' },
 );
 
 my $eumm_version =  do {

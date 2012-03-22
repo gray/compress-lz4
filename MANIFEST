@@ -8,6 +8,7 @@ ppport.h
 README
 src/lz4.c
 src/lz4.h
+src/Makefile.PL
 t/00_compile.t
 t/01_lz4.t
 xt/kwalitee.t
