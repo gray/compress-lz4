@@ -37,6 +37,13 @@ $conf{PREREQ_PM} = {
 WriteMakefile(%conf);
 
 
+# Fix for BSD make.
+sub MY::tt_top {
+    my $tt = shift->MM::top_targets;
+    $tt =~ s/^ subdirs \s :: .*? (?:=^\S)//msx;
+    return $tt;
+}
+
 sub MY::postamble {
     return <<"    MAKE_FRAG";
 authortest:
