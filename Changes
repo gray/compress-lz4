@@ -1,7 +1,10 @@
 Revision history for Compress-LZ4
 
+0.09  Fri Mar 23 17:25:01 UTC 2012
+    - Really fixed the BSD make issue.
+
 0.08  Fri Mar 23 16:26:11 UTC 2012
-    - Added fix for BSD Make.
+    - Added fix for BSD make.
 
 0.07  Thu Mar 22 16:08:31 UTC 2012
     - Removed use of debug module not listed in prereqs.
