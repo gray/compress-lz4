@@ -38,9 +38,9 @@ WriteMakefile(%conf);
 
 
 # Fix for BSD make.
-sub MY::tt_top {
+sub MY::top_targets {
     my $tt = shift->MM::top_targets;
-    $tt =~ s/^ subdirs \s :: .*? (?:=^\S)//msx;
+    $tt =~ s/^ subdirs \s :: .*? (?=^\S)//msx;
     return $tt;
 }
 
