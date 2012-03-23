@@ -3,7 +3,6 @@ use warnings;
 use ExtUtils::MakeMaker;
 
 WriteMakefile(
-    NAME      => 'src',
-    OBJECT    => '$(O_FILES)',
-    NO_MYMETA => 1,
+    NAME   => 'src',
+    OBJECT => '$(O_FILES)',
 );
