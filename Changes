@@ -1,5 +1,9 @@
 Revision history for Compress-LZ4
 
+0.10  Mon Mar 26 11:22:20 UTC 2012
+    - Moved source files to top-level directory to avoid portability problems
+      with EUMM and subdirs.
+
 0.09  Fri Mar 23 17:25:01 UTC 2012
     - Really fixed the BSD make issue.
 
