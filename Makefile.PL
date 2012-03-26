@@ -19,7 +19,7 @@ my %conf = (
         },
     },
 
-    OBJECT => '$(O_FILES) src/lz4$(OBJ_EXT)',
+    OBJECT => '$(O_FILES)',
 
     dist   => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean  => { FILES    => 'Compress-LZ4-*' },
@@ -36,13 +36,6 @@ $conf{PREREQ_PM} = {
 
 WriteMakefile(%conf);
 
-
-# Fix for BSD make.
-sub MY::top_targets {
-    my $tt = shift->MM::top_targets;
-    $tt =~ s/^ subdirs \s :: .*? (?=^\S)//msx;
-    return $tt;
-}
 
 sub MY::postamble {
     return <<"    MAKE_FRAG";

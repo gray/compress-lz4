@@ -7,7 +7,7 @@
 #define NEED_sv_2pvbyte
 #include "ppport.h"
 
-#include "src/lz4.h"
+#include "lz4.h"
 
 MODULE = Compress::LZ4    PACKAGE = Compress::LZ4
 
