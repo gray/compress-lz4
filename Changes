@@ -1,5 +1,8 @@
 Revision history for Compress-LZ4
 
+0.12  Wed Apr  4 12:53:04 UTC 2012
+    - Made length header portable across different architectures.
+
 0.11  Tue Apr  3 21:32:22 UTC 2012
     - Integrated latest LZ4 source for NetBSD fix.
 
