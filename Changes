@@ -1,5 +1,8 @@
 Revision history for Compress-LZ4
 
+0.13  Fri Jun  1 18:48:17 UTC 2012
+    - Prevented memory leak on invalid compression streams. (RT #77574)
+
 0.12  Wed Apr  4 12:53:04 UTC 2012
     - Made length header portable across different architectures.
 
