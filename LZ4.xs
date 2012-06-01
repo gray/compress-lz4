@@ -60,7 +60,7 @@ CODE:
     if (! SvOK(sv))
         XSRETURN_NO;
     src = SvPVbyte(sv, src_len);
-    if (! src_len)
+    if (! src_len || src_len < 5)
         XSRETURN_NO;
 
     /* Decode the length header. */
@@ -71,8 +71,10 @@ CODE:
     dest = SvPVX(RETVAL);
     if (! dest)
         XSRETURN_UNDEF;
-    if (0 > LZ4_uncompress(src + 4, dest, dest_len))
+    if (0 > LZ4_uncompress(src + 4, dest, dest_len)) {
+        SvREFCNT_dec(RETVAL);
         XSRETURN_UNDEF;
+    }
     SvCUR_set(RETVAL, dest_len);
     SvPOK_on(RETVAL);
 OUTPUT:
