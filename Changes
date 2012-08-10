@@ -1,5 +1,9 @@
 Revision history for Compress-LZ4
 
+0.14  Fri Aug 10 00:17:18 UTC 2012
+    - Integrated latest LZ4 source for performance enhancements.
+    - Added compress_hc function for higher compression.
+
 0.13  Fri Jun  1 18:48:17 UTC 2012
     - Prevented memory leak on invalid compression streams. (RT #77574)
 
