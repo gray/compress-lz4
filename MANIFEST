@@ -4,6 +4,8 @@ ex/benchmark.pl
 lib/Compress/LZ4.pm
 lz4.h
 LZ4.xs
+lz4hc.c
+lz4hc.h
 Makefile.PL
 MANIFEST			This list of files
 ppport.h

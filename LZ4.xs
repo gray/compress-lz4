@@ -8,6 +8,7 @@
 #include "ppport.h"
 
 #include "lz4.h"
+#include "lz4hc.h"
 
 MODULE = Compress::LZ4    PACKAGE = Compress::LZ4
 
@@ -16,6 +17,8 @@ PROTOTYPES: ENABLE
 SV *
 compress (sv)
     SV *sv
+ALIAS:
+    compress_hc = 1
 PREINIT:
     char *src, *dest;
     STRLEN src_len, dest_len;
@@ -39,7 +42,9 @@ CODE:
     dest[2] = (src_len>>16) & 0xff;
     dest[3] = (src_len>>24) & 0xff;
 
-    dest_len = LZ4_compress(src, dest + 4, src_len);
+    dest_len = ix ? LZ4_compressHC(src, dest + 4, src_len)
+                  : LZ4_compress(src, dest + 4, src_len);
+
     SvCUR_set(RETVAL, 4 + dest_len);
     SvPOK_on(RETVAL);
 OUTPUT:

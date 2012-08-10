@@ -12,7 +12,7 @@ $VERSION = eval $VERSION;
 
 XSLoader::load(__PACKAGE__, $XS_VERSION);
 
-our @EXPORT = qw(compress decompress uncompress);
+our @EXPORT = qw(compress compress_hc decompress uncompress);
 
 
 1;
@@ -27,8 +27,8 @@ Compress::LZ4 - Perl interface to the LZ4 (de)compressor
 
     use Compress::LZ4;
 
-    my $dest = compress($source);
-    my $dest = decompress($source);
+    my $compressed = compress($bytes);
+    my $decompressed = decompress($compressed);
 
 =head1 DESCRIPTION
 
@@ -38,18 +38,24 @@ The C<Compress::LZ4> module provides an interface to the LZ4 (de)compressor.
 
 =head2 compress
 
-    $string = compress($buffer)
+    $compressed = compress($bytes)
 
-Compresses the given buffer and returns the resulting string. The input
+Compresses the given buffer and returns the resulting bytes. The input
 buffer can be either a scalar or a scalar reference.
+
+=head2 compress_hc
+
+    $compressed = compress_hc($bytes)
+
+A higher-compression, but slower, version of C<compress>.
 
 =head2 decompress
 
 =head2 uncompress
 
-    $string = decompress($buffer)
+    $bytes = decompress($compressed)
 
-Decompresses the given buffer and returns the resulting string. The input
+Decompresses the given buffer and returns the resulting bytes. The input
 buffer can be either a scalar or a scalar reference.
 
 On error (in case of corrupted data) undef is returned.
@@ -58,39 +64,41 @@ On error (in case of corrupted data) undef is returned.
 
 This distribution contains a benchmarking script which compares serveral
 compression modules available on CPAN.  These are the results on a MacBook
-2GHz Core 2 Duo (64-bit) with Perl 5.14.2:
+2GHz Core 2 Duo (64-bit) with Perl 5.16.0:
 
     Compressible data (10 KiB) - compression
     ----------------------------------------
-    Compress::LZ4::compress     183794/s  1795 MiB/s  1.152%
-    Compress::Snappy::compress  122496/s  1196 MiB/s  5.332%
-    Compress::LZF::compress      44383/s   433 MiB/s  1.865%
-    Compress::Zlib::compress      2765/s    27 MiB/s  1.201%
-    Compress::Bzip2::compress      110/s     1 MiB/s  2.070%
+    Compress::LZ4::compress     185579/s  1812 MiB/s  1.152%
+    Compress::Snappy::compress  119467/s  1167 MiB/s  5.332%
+    Compress::LZF::compress      45728/s   447 MiB/s  1.865%
+    Compress::LZ4::compress_hc   21082/s   206 MiB/s  1.152%
+    Compress::Zlib::compress      6164/s    60 MiB/s  1.201%
+    Compress::Bzip2::compress      114/s     1 MiB/s  2.070%
 
     Compressible data (10 KiB) - decompression
     ------------------------------------------
-    Compress::LZ4::decompress     546133/s  5333 MiB/s
-    Compress::Snappy::decompress  175363/s  1713 MiB/s
-    Compress::LZF::decompress     135244/s  1321 MiB/s
-    Compress::Bzip2::decompress     6352/s    62 MiB/s
-    Compress::Zlib::uncompress      5440/s    53 MiB/s
+    Compress::LZ4::decompress     573439/s  5600 MiB/s
+    Compress::Snappy::decompress  192752/s  1882 MiB/s
+    Compress::LZF::decompress     139184/s  1359 MiB/s
+    Compress::Zlib::uncompress     30632/s   299 MiB/s
+    Compress::Bzip2::decompress     6347/s    62 MiB/s
 
     Uncompressible data (10 KiB) - compression
     ------------------------------------------
-    Compress::LZ4::compress     763738/s  7458 MiB/s  107.463%
-    Compress::Snappy::compress  552269/s  5393 MiB/s  100.000%
-    Compress::LZF::compress     532919/s  5204 MiB/s  101.493%
-    Compress::Bzip2::compress    15424/s   151 MiB/s  185.075%
-    Compress::Zlib::compress      4325/s    42 MiB/s  105.970%
+    Compress::LZ4::compress     827077/s  8077 MiB/s  110.000%
+    Compress::Snappy::compress  618951/s  6044 MiB/s  103.333%
+    Compress::LZF::compress     608424/s  5942 MiB/s  101.667%
+    Compress::LZ4::compress_hc   22974/s   224 MiB/s  110.000%
+    Compress::Zlib::compress     22755/s   222 MiB/s  115.000%
+    Compress::Bzip2::compress    15358/s   150 MiB/s  215.000%
 
     Uncompressible data (10 KiB) - decompression
     --------------------------------------------
-    Compress::LZF::decompress     2583577/s  25230 MiB/s
-    Compress::LZ4::decompress     2383127/s  23273 MiB/s
-    Compress::Snappy::decompress  2068002/s  20195 MiB/s
-    Compress::Bzip2::decompress     48650/s    475 MiB/s
-    Compress::Zlib::uncompress       6342/s     62 MiB/s
+    Compress::LZF::decompress     2513115/s  24542 MiB/s
+    Compress::LZ4::decompress     2502283/s  24436 MiB/s
+    Compress::Snappy::decompress  2406041/s  23496 MiB/s
+    Compress::Zlib::uncompress      90163/s    880 MiB/s
+    Compress::Bzip2::decompress     50124/s    489 MiB/s
 
 =head1 SEE ALSO
 
