@@ -1,5 +1,8 @@
 Revision history for Compress-LZ4
 
+0.15  Sat Aug 11 16:10:43 UTC 2012
+    - Applied previous NetBSD fix to LZ4HC.
+
 0.14  Fri Aug 10 00:17:18 UTC 2012
     - Integrated latest LZ4 source for performance enhancements.
     - Added compress_hc function for higher compression.
