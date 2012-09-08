@@ -1,9 +1,9 @@
-_lz4.c
 Changes
 ex/benchmark.pl
 lib/Compress/LZ4.pm
 lz4.h
 LZ4.xs
+lz4c.c
 lz4hc.c
 lz4hc.h
 Makefile.PL
