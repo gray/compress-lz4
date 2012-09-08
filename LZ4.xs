@@ -23,7 +23,7 @@ PREINIT:
     char *src, *dest;
     STRLEN src_len, dest_len;
 CODE:
-    if (SvROK(sv))
+    if (SvROK(sv) && ! SvAMAGIC(sv))
         sv = SvRV(sv);
     if (! SvOK(sv))
         XSRETURN_NO;
