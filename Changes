@@ -1,5 +1,10 @@
 Revision history for Compress-LZ4
 
+0.16  Sat Sep  8 18:14:00 UTC 2012
+    - Integrated latest LZ4 source to fix buffer overflow.
+    - Allowed overloaded objects to be stringified.
+    - Renamed source file for portability.
+
 0.15  Sat Aug 11 16:10:43 UTC 2012
     - Applied previous NetBSD fix to LZ4HC.
 
