@@ -2,6 +2,7 @@ use strict;
 use warnings;
 use Test::More;
 use Compress::LZ4;
+use Config;
 
 for (qw(compress compress_hc decompress uncompress)) {
     ok eval "defined &$_", "$_() is exported";
@@ -39,10 +40,12 @@ for my $len (0 .. 1_024) {
 }
 
 # https://rt.cpan.org/Public/Bug/Display.html?id=75624
-{
+SKIP: {
+    skip 'not AMD64', 1
+        unless $Config{archname} =~ /(?:x86_|amd)64/;
     # Remove the length header.
     my $data = unpack "x4 a*", compress('0' x 14);
-    ok $data eq "\0240\001\0P00000", 'AMD64 bug';
+    cmp_ok $data, 'eq', "\0240\001\0P00000", 'AMD64 bug';
 }
 
 done_testing;
