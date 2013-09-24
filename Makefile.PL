@@ -9,8 +9,8 @@ my %conf = (
     VERSION_FROM   => 'lib/Compress/LZ4.pm',
     ABSTRACT_FROM  => 'lib/Compress/LZ4.pm',
     PREREQ_PM      => {
+        Exporter => '5.57',
         XSLoader => 0,
-        parent   => 0,
     },
     BUILD_REQUIRES => { 'Test::More' => 0.82, },
     META_MERGE     => {
