@@ -6,6 +6,7 @@ use Config;
 
 for (qw(compress compress_hc decompress uncompress)) {
     ok eval "defined &$_", "$_() is exported";
+    ok eval "defined &lz4_$_", "lz4_$_() is exported";
 }
 
 {
@@ -37,6 +38,17 @@ for my $len (0 .. 1_024) {
     package main;
     my $scalar = TrimmedString->new('  string  ');
     ok compress($scalar) eq compress('string'), 'blessed scalar ref';
+}
+
+{
+    my $in = 'testtesttest';
+    my $len = length $in;
+    my $compressed = compress($in);
+    my $compressed_raw = lz4_compress($in);
+    is length($compressed_raw), length($compressed) - 4, 'raw length';
+    is $compressed_raw, substr($compressed, 4), 'raw data';
+    is lz4_decompress($compressed_raw, $len), decompress($compressed),
+        'raw decompressed';
 }
 
 # https://rt.cpan.org/Public/Bug/Display.html?id=75624

@@ -12,7 +12,10 @@ $VERSION = eval $VERSION;
 
 XSLoader::load(__PACKAGE__, $XS_VERSION);
 
-our @EXPORT = qw(compress compress_hc decompress uncompress);
+our @EXPORT = qw(
+    compress compress_hc decompress uncompress
+    lz4_compress lz4_compress_hc lz4_decompress lz4_uncompress
+);
 
 
 1;
@@ -60,9 +63,33 @@ buffer can be either a scalar or a scalar reference.
 
 On error (in case of corrupted data) undef is returned.
 
+=head1 COMPATIBILITY
+
+Because LZ4 does not define a container format, the original data size is
+prepended to the compressed data as a little-endian 4-byte integer. This
+method is compatible with the majority of other LZ4 language bindings.
+
+If you want to deal with the raw data without the length header, you can use
+the following functions:
+
+=head2 lz4_compress
+
+=head2 lz4_compress_hc
+
+Same as C<compress>/C<compress_hc> but does not add the length header.
+
+=head2 lz4_decompress
+
+=head2 lz4_uncompress
+
+    $bytes = decompress($compressed, $original_data_size)
+
+Same as C<decompress>/C<uncompress> but also requires the original data size
+to be given.
+
 =head1 PERFORMANCE
 
-This distribution contains a benchmarking script which compares serveral
+This distribution contains a benchmarking script which compares several
 compression modules available on CPAN.  These are the results on a MacBook
 2GHz Core 2 Duo (64-bit) with Perl 5.16.0:
 
