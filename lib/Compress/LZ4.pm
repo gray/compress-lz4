@@ -3,7 +3,7 @@ package Compress::LZ4;
 use strict;
 use warnings;
 
-use Exporter qw(import);;
+use Exporter qw(import);
 use XSLoader;
 
 our $VERSION    = '0.18';
@@ -67,10 +67,10 @@ On error (in case of corrupted data) undef is returned.
 
 Because LZ4 does not define a container format, the original data size is
 prepended to the compressed data as a little-endian 4-byte integer. This
-method is compatible with the majority of other LZ4 language bindings.
+format is compatible with the majority of other LZ4 language bindings.
 
-If you want to deal with the raw data without the length header, you can use
-the following functions:
+If you are dealing with raw data from an external source that does not format
+the data this way, you need to use the following functions.
 
 =head2 lz4_compress
 
@@ -172,7 +172,7 @@ L<http://search.cpan.org/dist/Compress-LZ4/>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2012-2013 gray <gray at cpan.org>, all rights reserved.
+Copyright (C) 2012-2014 gray <gray at cpan.org>, all rights reserved.
 
 This library is free software; you can redistribute it and/or modify it under
 the same terms as Perl itself.
