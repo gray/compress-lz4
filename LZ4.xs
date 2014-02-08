@@ -103,7 +103,7 @@ CODE:
         XSRETURN_UNDEF;
 
     if (1 == items)
-        ret = LZ4_decompress_fast(src + 4, dest, dest_len);
+        ret = LZ4_decompress_safe(src + 4, dest, src_len - 4, dest_len);
     else
         ret = LZ4_decompress_safe(src, dest, src_len, dest_len);
 
