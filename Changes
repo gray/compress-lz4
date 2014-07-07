@@ -1,5 +1,9 @@
 Revision history for Compress-LZ4
 
+0.20  Mon Jul  7 21:01:38 UTC 2014
+    - Integrated latest LZ4 source for security fix on 32-bit systems.
+    - Updated ppport.h.
+
 0.19  Sat Feb  8 00:33:22 UTC 2014
     - Switched from fast to safe decompression function to protect against
       bad data.
