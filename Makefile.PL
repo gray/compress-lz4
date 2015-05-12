@@ -19,7 +19,8 @@ my %conf = (
         },
     },
 
-    OBJECT => '$(O_FILES)',
+    MYEXTLIB => 'src/lz4$(LIB_EXT)',
+    INC      => '-Isrc',
 
     dist   => { COMPRESS => 'gzip -9f', SUFFIX => 'gz', },
     clean  => { FILES    => 'Compress-LZ4-*' },
@@ -39,6 +40,9 @@ WriteMakefile(%conf);
 
 sub MY::postamble {
     return <<"    MAKE_FRAG";
+\$(MYEXTLIB): src/Makefile
+\tcd src && \$(MAKE) \$(PASSTHRU)
+
 authortest:
 \t\$(MAKE) -e \$(TEST_TYPE) TEST_FILES="xt/*.t"
     MAKE_FRAG

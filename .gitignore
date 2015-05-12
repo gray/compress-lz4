@@ -1,10 +1,11 @@
 *.o
+/LZ4.bs
 /LZ4.c
 Compress-LZ4-*
-LZ4.bs
 MANIFEST.bak
 MYMETA.*
 Makefile
 Makefile.old
 blib/
 pm_to_blib
+src/lz4.a
