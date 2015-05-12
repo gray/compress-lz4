@@ -25,8 +25,11 @@ PREINIT:
     char *src, *dest;
     STRLEN src_len, dest_len;
 CODE:
-    if (SvROK(sv) && ! SvAMAGIC(sv))
+    SvGETMAGIC(sv);
+    if (SvROK(sv) && ! SvAMAGIC(sv)) {
         sv = SvRV(sv);
+        SvGETMAGIC(sv);
+    }
     if (! SvOK(sv))
         XSRETURN_NO;
     src = SvPVbyte(sv, src_len);
@@ -75,8 +78,11 @@ PREINIT:
     int ret;
 CODE:
     PERL_UNUSED_VAR(ix);  /* -W */
-    if (SvROK(sv))
+    SvGETMAGIC(sv);
+    if (SvROK(sv) && ! SvAMAGIC(sv)) {
         sv = SvRV(sv);
+        SvGETMAGIC(sv);
+    }
     if (! SvOK(sv))
         XSRETURN_NO;
     src = SvPVbyte(sv, src_len);

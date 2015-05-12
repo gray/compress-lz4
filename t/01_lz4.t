@@ -41,6 +41,14 @@ for my $len (0 .. 1_024) {
 }
 
 {
+    my $compressed = compress('string');
+    ok compress(substr 'string', 0) eq $compressed,
+        'compressing magical substr lvalue';
+    ok uncompress(substr $compressed, 0) eq uncompress($compressed),
+        'uncompressing magical substr lvalue';
+}
+
+{
     my $in = 'testtesttest';
     my $len = length $in;
     my $compressed = compress($in);
