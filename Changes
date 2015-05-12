@@ -1,5 +1,10 @@
 Revision history for Compress-LZ4
 
+0.21  Tue May 12 18:50:33 UTC 2015
+    - Allowed 'magical' input.  (RT #104349)
+    - Built LZ4 source as a static library.
+    - Integrated latest LZ4 source (r129).
+
 0.20  Mon Jul  7 21:01:38 UTC 2014
     - Integrated latest LZ4 source for security fix on 32-bit systems.
     - Updated ppport.h.
