@@ -15,8 +15,9 @@ MODULE = Compress::LZ4    PACKAGE = Compress::LZ4
 PROTOTYPES: ENABLE
 
 SV *
-compress (sv)
+compress (sv, level=0)
     SV *sv
+    IV level
 ALIAS:
     compress_hc = 1
     lz4_compress = 2
@@ -24,6 +25,7 @@ ALIAS:
 PREINIT:
     char *src, *dest;
     STRLEN src_len, dest_len;
+    int hc;
 CODE:
     SvGETMAGIC(sv);
     if (SvROK(sv) && ! SvAMAGIC(sv)) {
@@ -43,6 +45,7 @@ CODE:
     if (! dest)
         XSRETURN_UNDEF;
 
+    hc = ix || 0 < level;
     if (2 > ix) {
         /* Add the length header as 4 bytes in little endian. */
         dest[0] = src_len       & 0xff;
@@ -50,13 +53,13 @@ CODE:
         dest[2] = (src_len>>16) & 0xff;
         dest[3] = (src_len>>24) & 0xff;
 
-        dest_len = ix ? LZ4_compressHC(src, dest + 4, src_len)
-                    : LZ4_compress(src, dest + 4, src_len);
+        dest_len = hc ? LZ4_compress_HC(src, dest + 4, src_len, dest_len, level)
+                    : LZ4_compress_default(src, dest + 4, src_len, dest_len);
         dest_len += 4;
     }
     else {
-        dest_len = ix ? LZ4_compressHC(src, dest, src_len)
-                    : LZ4_compress(src, dest, src_len);
+        dest_len = hc ? LZ4_compress_HC(src, dest, src_len, dest_len, level)
+                    : LZ4_compress_default(src, dest, src_len, dest_len);
     }
 
     SvCUR_set(RETVAL, dest_len);

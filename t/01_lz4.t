@@ -21,7 +21,7 @@ for my $len (0 .. 1_024) {
     my $compressed = compress($in);
     my $decompressed = decompress($compressed);
     is $decompressed, $in, "rountrip- length: $len";
-    is compress_hc($in), $compressed, "compress_hc- length: $len";
+    is compress_hc($in, 4), $compressed, "compress_hc- length: $len";
 }
 
 {

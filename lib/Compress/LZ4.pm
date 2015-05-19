@@ -48,9 +48,10 @@ buffer can be either a scalar or a scalar reference.
 
 =head2 compress_hc
 
-    $compressed = compress_hc($bytes)
+    $compressed = compress_hc($bytes [, $level])
 
-A higher-compression, but slower, version of C<compress>.
+A higher-compression, but slower, version of C<compress>. The default
+compression level may be changed if an optional value (0-16) is given.
 
 =head2 decompress
 
