@@ -130,7 +130,7 @@ compression modules available on CPAN.  These are the results on a MacBook
 
 =head1 SEE ALSO
 
-L<http://code.google.com/p/lz4/>
+L<http://cyan4973.github.io/lz4/>
 
 =head1 REQUESTS AND BUGS
 
