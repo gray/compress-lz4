@@ -15,6 +15,8 @@ sub MY::top_targets {
 all      :: static
 pure_all :: static
 static   :: lz4\$(LIB_EXT)
+# https://rt.cpan.org/Public/Bug/Display.html?id=7417
+dynamic  :: static
 
 lz4\$(LIB_EXT): \$(O_FILES)
 \t\$(AR) cr lz4\$(LIB_EXT) \$(O_FILES)
