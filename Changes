@@ -1,5 +1,12 @@
 Revision history for Compress-LZ4
 
+0.24  Thu Mar 23 04:19:38 UTC 2017
+    - Fixed decompression to stop returning bytes past the end of the payload.
+      RT #120695
+    - Integrated latest LZ4 source (1.7.5).
+    - Allowed acceleration level to be specified.
+    - Updated pod regarding compatibilty.
+
 0.23  Mon Jul 25 20:34:43 UTC 2016
     - Added fix for EUMM bug with BSD make.
 
