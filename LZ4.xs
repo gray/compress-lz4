@@ -62,6 +62,10 @@ CODE:
                     : LZ4_compress_default(src, dest, src_len, dest_len);
     }
 
+    if (! dest_len) {
+        SvREFCNT_dec(RETVAL);
+        XSRETURN_UNDEF;
+    }
     SvCUR_set(RETVAL, dest_len);
     SvPOK_on(RETVAL);
 OUTPUT:
