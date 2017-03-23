@@ -66,12 +66,13 @@ On error (in case of corrupted data) undef is returned.
 
 =head1 COMPATIBILITY
 
-Because LZ4 does not define a container format, the original data size is
-prepended to the compressed data as a little-endian 4-byte integer. This
-format is compatible with the majority of other LZ4 language bindings.
+This library does not produce output that is compatible with the official
+frame format. Because LZ4 did not define a container format until long after
+it was released, many bindings, including this one, prepend the original data
+size to the compressed data as a little-endian 4-byte integer.
 
 If you are dealing with raw data from an external source that does not format
-the data this way, you need to use the following functions.
+the data this way, you need to use the following functions:
 
 =head2 lz4_compress
 
