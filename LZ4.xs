@@ -120,7 +120,7 @@ CODE:
         SvREFCNT_dec(RETVAL);
         XSRETURN_UNDEF;
     }
-    SvCUR_set(RETVAL, dest_len);
+    SvCUR_set(RETVAL, ret);
     SvPOK_on(RETVAL);
 OUTPUT:
     RETVAL
