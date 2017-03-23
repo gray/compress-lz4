@@ -41,17 +41,19 @@ The C<Compress::LZ4> module provides an interface to the LZ4 (de)compressor.
 
 =head2 compress
 
-    $compressed = compress($bytes)
+    $compressed = compress($bytes [, $level])
 
-Compresses the given buffer and returns the resulting bytes. The input
-buffer can be either a scalar or a scalar reference.
+Compresses the given buffer and returns the resulting bytes. The input buffer
+can be either a scalar or a scalar reference. The default acceleration level
+(1) can be changed, with each additional level providing ~3% increase in
+speed; the compression level will be negatively affected.
 
 =head2 compress_hc
 
     $compressed = compress_hc($bytes [, $level])
 
 A higher-compression, but slower, version of C<compress>. The default
-compression level may be changed if an optional value (0-16) is given.
+compression level (9) can be changed if an optional value (0-16) is given.
 
 =head2 decompress
 
