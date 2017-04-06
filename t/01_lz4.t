@@ -68,4 +68,7 @@ SKIP: {
     cmp_ok $data, 'eq', "\0240\001\0P00000", 'AMD64 bug';
 }
 
+# https://rt.cpan.org/Public/Bug/Display.html?id=120991
+decompress("\0"x5);
+
 done_testing;

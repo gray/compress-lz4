@@ -104,11 +104,11 @@ CODE:
         dest_len = (src[0] & 0xff) | (src[1] & 0xff) << 8 | (src[2] & 0xff) << 16
                                 | (src[3] & 0xff) << 24;
     }
-    else {
-        if (0 >= len)
-            XSRETURN_NO;
+    else
         dest_len = len;
-    }
+
+    if (0 >= dest_len)
+        XSRETURN_NO;
 
     RETVAL = newSV(dest_len);
     dest = SvPVX(RETVAL);
