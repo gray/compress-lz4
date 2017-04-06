@@ -4,9 +4,9 @@
 /*
 ----------------------------------------------------------------------
 
-    ppport.h -- Perl/Pollution/Portability Version 3.24
+    ./ppport.h -- Perl/Pollution/Portability Version 3.35
 
-    Automatically created by Devel::PPPort running under perl 5.018002.
+    Automatically created by Devel::PPPort running under perl 5.024001.
 
     Version 3.x, Copyright (c) 2004-2013, Marcus Holland-Moritz.
 
@@ -23,8 +23,8 @@ SKIP
 if (@ARGV && $ARGV[0] eq '--unstrip') {
   eval { require Devel::PPPort };
   $@ and die "Cannot require Devel::PPPort, please install.\n";
-  if (eval $Devel::PPPort::VERSION < 3.24) {
-    die "ppport.h was originally generated with Devel::PPPort 3.24.\n"
+  if (eval $Devel::PPPort::VERSION < 3.35) {
+    die "./ppport.h was originally generated with Devel::PPPort 3.35.\n"
       . "Your Devel::PPPort is only version $Devel::PPPort::VERSION.\n"
       . "Please install a newer version, or --unstrip will not work.\n";
   }
@@ -66,7 +66,7 @@ __DATA__*/
 #define _dpppDEC2BCD(dec) ((((dec)/100)<<8)|((((dec)%100)/10)<<4)|((dec)%10))
 #define PERL_BCDVERSION ((_dpppDEC2BCD(PERL_REVISION)<<24)|(_dpppDEC2BCD(PERL_VERSION)<<12)|_dpppDEC2BCD(PERL_SUBVERSION))
 #if PERL_REVISION != 5
-#error ppport.h only works with Perl version 5
+#error ./ppport.h only works with Perl version 5
 #endif
 #ifndef dTHR
 #define dTHR dNOOP
@@ -503,6 +503,58 @@ sv_setnv(sv, (double)TeMpUv); \
 #ifndef Newxz
 #define Newxz(v,n,t) Newz(0,v,n,t)
 #endif
+#ifndef PERL_MAGIC_qr
+#define PERL_MAGIC_qr 'r'
+#endif
+#ifndef cBOOL
+#define cBOOL(cbool) ((cbool) ? (bool)1 : (bool)0)
+#endif
+#ifndef OpHAS_SIBLING
+#define OpHAS_SIBLING(o) (cBOOL((o)->op_sibling))
+#endif
+#ifndef OpSIBLING
+#define OpSIBLING(o) (0 + (o)->op_sibling)
+#endif
+#ifndef OpMORESIB_set
+#define OpMORESIB_set(o, sib) ((o)->op_sibling = (sib))
+#endif
+#ifndef OpLASTSIB_set
+#define OpLASTSIB_set(o, parent) ((o)->op_sibling = NULL)
+#endif
+#ifndef OpMAYBESIB_set
+#define OpMAYBESIB_set(o, sib, parent) ((o)->op_sibling = (sib))
+#endif
+#ifndef SvRX
+#if defined(NEED_SvRX)
+static void * DPPP_(my_SvRX)(pTHX_ SV *rv);
+static
+#else
+extern void * DPPP_(my_SvRX)(pTHX_ SV *rv);
+#endif
+#ifdef SvRX
+#undef SvRX
+#endif
+#define SvRX(a) DPPP_(my_SvRX)(aTHX_ a)
+#if defined(NEED_SvRX) || defined(NEED_SvRX_GLOBAL)
+void *
+DPPP_(my_SvRX)(pTHX_ SV *rv)
+{
+if (SvROK(rv)) {
+SV *sv = SvRV(rv);
+if (SvMAGICAL(sv)) {
+MAGIC *mg = mg_find(sv, PERL_MAGIC_qr);
+if (mg && mg->mg_obj) {
+return mg->mg_obj;
+}
+}
+}
+return 0;
+}
+#endif
+#endif
+#ifndef SvRXOK
+#define SvRXOK(sv) (!!SvRX(sv))
+#endif
 #ifndef PERL_UNUSED_DECL
 #ifdef HASATTRIBUTE
 #if (defined(__GNUC__) && defined(__cplusplus)) || defined(__INTEL_COMPILER)
@@ -530,6 +582,13 @@ sv_setnv(sv, (double)TeMpUv); \
 #define PERL_UNUSED_CONTEXT PERL_UNUSED_ARG(my_perl)
 #else
 #define PERL_UNUSED_CONTEXT
+#endif
+#endif
+#ifndef PERL_UNUSED_RESULT
+#if defined(__GNUC__) && defined(HASATTRIBUTE_WARN_UNUSED_RESULT)
+#define PERL_UNUSED_RESULT(v) STMT_START { __typeof__(v) z = (v); (void)sizeof(z); } STMT_END
+#else
+#define PERL_UNUSED_RESULT(v) ((void)(v))
 #endif
 #endif
 #ifndef NOOP
@@ -762,7 +821,11 @@ typedef OP* (CPERLscope(*Perl_check_t)) (pTHX_ OP*);
 #undef isPRINT
 #endif
 #ifdef HAS_QUAD
+#ifdef U64TYPE
 #define WIDEST_UTYPE U64TYPE
+#else
+#define WIDEST_UTYPE Quad_t
+#endif
 #else
 #define WIDEST_UTYPE U32
 #endif
@@ -794,6 +857,12 @@ typedef OP* (CPERLscope(*Perl_check_t)) (pTHX_ OP*);
 SvUTF8(HeKEY_sv(he)) : \
 (U32)HeKUTF8(he))
 #endif
+#endif
+#ifndef C_ARRAY_LENGTH
+#define C_ARRAY_LENGTH(a) (sizeof(a)/sizeof((a)[0]))
+#endif
+#ifndef C_ARRAY_END
+#define C_ARRAY_END(a) ((a) + C_ARRAY_LENGTH(a))
 #endif
 #ifndef PERL_SIGNALS_UNSAFE_FLAG
 #define PERL_SIGNALS_UNSAFE_FLAG 0x0001
@@ -1800,20 +1869,42 @@ return sv;
 #ifndef HvNAMELEN_get
 #define HvNAMELEN_get(hv) (HvNAME_get(hv) ? (I32)strlen(HvNAME_get(hv)) : 0)
 #endif
+#ifndef gv_fetchpvn_flags
+#if defined(NEED_gv_fetchpvn_flags)
+static GV* DPPP_(my_gv_fetchpvn_flags)(pTHX_ const char* name, STRLEN len, int flags, int types);
+static
+#else
+extern GV* DPPP_(my_gv_fetchpvn_flags)(pTHX_ const char* name, STRLEN len, int flags, int types);
+#endif
+#ifdef gv_fetchpvn_flags
+#undef gv_fetchpvn_flags
+#endif
+#define gv_fetchpvn_flags(a,b,c,d) DPPP_(my_gv_fetchpvn_flags)(aTHX_ a,b,c,d)
+#define Perl_gv_fetchpvn_flags DPPP_(my_gv_fetchpvn_flags)
+#if defined(NEED_gv_fetchpvn_flags) || defined(NEED_gv_fetchpvn_flags_GLOBAL)
+GV*
+DPPP_(my_gv_fetchpvn_flags)(pTHX_ const char* name, STRLEN len, int flags, int types) {
+char *namepv = savepvn(name, len);
+GV* stash = gv_fetchpv(namepv, TRUE, SVt_PVHV);
+Safefree(namepv);
+return stash;
+}
+#endif
+#endif
 #ifndef GvSVn
 #define GvSVn(gv) GvSV(gv)
 #endif
 #ifndef isGV_with_GP
 #define isGV_with_GP(gv) isGV(gv)
 #endif
-#ifndef gv_fetchpvn_flags
-#define gv_fetchpvn_flags(name, len, flags, svt) gv_fetchpv(name, flags, svt)
-#endif
 #ifndef gv_fetchsv
 #define gv_fetchsv(name, flags, svt) gv_fetchpv(SvPV_nolen_const(name), flags, svt)
 #endif
 #ifndef get_cvn_flags
 #define get_cvn_flags(name, namelen, flags) get_cv(name, flags)
+#endif
+#ifndef gv_init_pvn
+#define gv_init_pvn(gv, stash, ptr, len, flags) gv_init(gv, stash, ptr, len, flags & GV_ADDMULTI ? TRUE : FALSE)
 #endif
 #ifndef WARN_ALL
 #define WARN_ALL 0
@@ -2030,12 +2121,16 @@ warn("%s", SvPV_nolen(sv));
 #ifndef HEf_SVKEY
 #define HEf_SVKEY -2
 #endif
+#ifndef MUTABLE_PTR
 #if defined(__GNUC__) && !defined(PERL_GCC_BRACE_GROUPS_FORBIDDEN)
 #define MUTABLE_PTR(p) ({ void *_p = (p); _p; })
 #else
 #define MUTABLE_PTR(p) ((void *) (p))
 #endif
+#endif
+#ifndef MUTABLE_SV
 #define MUTABLE_SV(p) ((SV *)MUTABLE_PTR(p))
+#endif
 #ifndef PERL_MAGIC_sv
 #define PERL_MAGIC_sv '\0'
 #endif
@@ -2279,19 +2374,16 @@ sv_magic(SvMp_sv, obj, how, SvMp_name, SvMp_namlen); \
 #endif
 #if !defined(mg_findext)
 #if defined(NEED_mg_findext)
-static MAGIC * DPPP_(my_mg_findext)(pTHX_ SV * sv, int type, const MGVTBL *vtbl);
+static MAGIC * DPPP_(my_mg_findext)(SV * sv, int type, const MGVTBL *vtbl);
 static
 #else
-extern MAGIC * DPPP_(my_mg_findext)(pTHX_ SV * sv, int type, const MGVTBL *vtbl);
+extern MAGIC * DPPP_(my_mg_findext)(SV * sv, int type, const MGVTBL *vtbl);
 #endif
-#ifdef mg_findext
-#undef mg_findext
-#endif
-#define mg_findext(a,b,c) DPPP_(my_mg_findext)(aTHX_ a,b,c)
+#define mg_findext DPPP_(my_mg_findext)
 #define Perl_mg_findext DPPP_(my_mg_findext)
 #if defined(NEED_mg_findext) || defined(NEED_mg_findext_GLOBAL)
 MAGIC *
-DPPP_(my_mg_findext)(pTHX_ SV * sv, int type, const MGVTBL *vtbl) {
+DPPP_(my_mg_findext)(SV * sv, int type, const MGVTBL *vtbl) {
 if (sv) {
 MAGIC *mg;
 #ifdef AvPAD_NAMELIST
@@ -2426,6 +2518,73 @@ return 0;
 #endif
 #ifndef CopSTASH_eq
 #define CopSTASH_eq(c,hv) (CopSTASH(c) == (hv))
+#endif
+#endif
+#if (PERL_BCDVERSION >= 0x5006000)
+#ifndef caller_cx
+#if defined(NEED_caller_cx) || defined(NEED_caller_cx_GLOBAL)
+static I32
+DPPP_dopoptosub_at(const PERL_CONTEXT *cxstk, I32 startingblock)
+{
+I32 i;
+for (i = startingblock; i >= 0; i--) {
+register const PERL_CONTEXT * const cx = &cxstk[i];
+switch (CxTYPE(cx)) {
+default:
+continue;
+case CXt_EVAL:
+case CXt_SUB:
+case CXt_FORMAT:
+return i;
+}
+}
+return i;
+}
+#endif
+#if defined(NEED_caller_cx)
+static const PERL_CONTEXT * DPPP_(my_caller_cx)(pTHX_ I32 count, const PERL_CONTEXT **dbcxp);
+static
+#else
+extern const PERL_CONTEXT * DPPP_(my_caller_cx)(pTHX_ I32 count, const PERL_CONTEXT **dbcxp);
+#endif
+#ifdef caller_cx
+#undef caller_cx
+#endif
+#define caller_cx(a,b) DPPP_(my_caller_cx)(aTHX_ a,b)
+#define Perl_caller_cx DPPP_(my_caller_cx)
+#if defined(NEED_caller_cx) || defined(NEED_caller_cx_GLOBAL)
+const PERL_CONTEXT *
+DPPP_(my_caller_cx)(pTHX_ I32 count, const PERL_CONTEXT **dbcxp)
+{
+register I32 cxix = DPPP_dopoptosub_at(cxstack, cxstack_ix);
+register const PERL_CONTEXT *cx;
+register const PERL_CONTEXT *ccstack = cxstack;
+const PERL_SI *top_si = PL_curstackinfo;
+for (;;) {
+while (cxix < 0 && top_si->si_type != PERLSI_MAIN) {
+top_si = top_si->si_prev;
+ccstack = top_si->si_cxstack;
+cxix = DPPP_dopoptosub_at(ccstack, top_si->si_cxix);
+}
+if (cxix < 0)
+return NULL;
+if (PL_DBsub && GvCV(PL_DBsub) && cxix >= 0 &&
+ccstack[cxix].blk_sub.cv == GvCV(PL_DBsub))
+count++;
+if (!count--)
+break;
+cxix = DPPP_dopoptosub_at(ccstack, cxix - 1);
+}
+cx = &ccstack[cxix];
+if (dbcxp) *dbcxp = cx;
+if (CxTYPE(cx) == CXt_SUB || CxTYPE(cx) == CXt_FORMAT) {
+const I32 dbcxix = DPPP_dopoptosub_at(ccstack, cxix - 1);
+if (PL_DBsub && GvCV(PL_DBsub) && dbcxix >= 0 && ccstack[dbcxix].blk_sub.cv == GvCV(PL_DBsub))
+cx = &ccstack[dbcxix];
+}
+return cx;
+}
+#endif
 #endif
 #endif
 #ifndef IN_PERL_COMPILETIME
