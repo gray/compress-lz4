@@ -1,5 +1,9 @@
 Revision history for Compress-LZ4
 
+0.25  Thu Apr  6 16:34:41 UTC 2017
+    - Safely handled 0-size, >0 length payload. (RT #120991)
+    - Updated ppport.h.
+
 0.24  Thu Mar 23 04:19:38 UTC 2017
     - Fixed decompression to stop returning bytes past the end of the payload.
       RT #120695
@@ -15,7 +19,7 @@ Revision history for Compress-LZ4
     - Migrated from deprecated API.
 
 0.21  Tue May 12 18:50:33 UTC 2015
-    - Allowed 'magical' input.  (RT #104349)
+    - Allowed 'magical' input. (RT #104349)
     - Built LZ4 source as a static library.
     - Integrated latest LZ4 source (r129).
 
